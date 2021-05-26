@@ -1,0 +1,59 @@
+Start,Width,Name,Desc
+1,2,UF,Unidade da Federação
+3,4,ANO,Ano de Referência
+7,2,MÊS,Mês da Pesquisa
+9,8,V102,Número do Controle
+17,2,V103,Número de Série
+19,2,V201,Número de Ordem
+21,1,V202,Sexo
+22,1,V203,Condição na Unidade Domiciliar
+23,1,V204,Condição na Família
+24,1,V205,Número da Família
+25,2,V206,Dia de nascimento
+27,2,V236,Mês de nascimento
+29,3,V246,Ano de nascimento
+32,1,V207,Sabe ler e escrever?
+33,1,V208,Freqüenta escola?
+34,1,V209,Última série concluída
+35,1,V210,Grau
+36,1,V211,Concluiu o curso?
+37,1,V301,O que fez na semana?
+38,1,V302,Tinha outro trabalho?
+39,3,V303,Ocupação na semana
+42,3,V304,Atividade / Ramo do negócio
+45,1,V305,Ramo de atividade
+46,1,V306,Posição na ocupação
+47,1,V307,"Ganhava por mês, quinzena, semana ou outra forma"
+48,1,V308,Tinha carteira assinada?
+49,9,V309,Rendimento mensal em dinheiro
+58,2,V339,Faixa de rendimento em dinheiro no trabalho principal (código)
+60,2,V310,Horas efetivamente trabalhadas na semana
+62,9,V311,Rendimento efetivamente recebido no mês no(s) outro(s) trabalho(s)
+71,2,V341,Faixa de rendimento em dinheiro no(s) outro(s) trabalho(s) (código)
+73,2,V312,Horas efetivamente trabalhadas na semana no(s) outro(s) trabalho(s)
+75,1,V313,Tomou providência no período?
+76,1,V314,Tomou providência antes?
+77,1,V315,Que providência tomou?
+78,2,V316,Quando tomou providência (dia)
+80,2,V346,Quando tomou providência (mês)
+82,2,V356,Quando tomou providência (ano)
+84,1,V366,Quando tomou providência (salto)
+85,2,V317,Quanto tempo de procura (meses)
+87,2,V347,Quanto tempo de procura (semanas)
+89,1,V318,Já trabalhou antes com remuneração
+90,1,V319,Já trabalhou antes sem remuneração
+91,2,V320,Quanto tempo não trabalha (anos)
+93,2,V350,Quanto tempo não trabalha (meses)
+95,2,V360,Quanto tempo não trabalha (semanas)
+97,3,V321,Ocupação anterior
+100,3,V322,Atividade anterior
+103,1,V323,Ramo da atividade anterior
+104,1,V324,Posição da ocupação anterior
+105,2,V325,Tempo trabalhado no último emprego (anos)
+107,2,V355,Tempo trabalhado no último emprego (meses)
+109,1,V326,Por que saiu do último emprego?
+110,1,V327,Carteira assinada no último emprego
+111,1,V328,Recebeu fundo de garantia no último emprego
+112,3,V256,Idade calculada
+115,14,V500,14 espaços em branco
+129,9,PESO,Peso da pessoa

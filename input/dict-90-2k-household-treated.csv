@@ -1,0 +1,22 @@
+Start,Width,Name,Desc
+1,2,UF,Unidade da Federação
+3,4,ANO,ANO
+7,2,MÊS,Mês da Pesquisa
+9,8,V102,Número do Controle
+17,2,V103,Número de Série
+19,4,V101,Número no 2.02/2.03
+23,1,V104,Tipo de entrevista
+24,2,V105,Mês da pesquisa
+26,1,V106,Remessa
+27,3,V107,Código do entrevistador
+30,1,V108,Unidade adicional
+31,2,V109,Total de pessoas
+33,2,V110,Total pessoas de 10 anos e mais de idade
+35,2,V111,Número de ordem do informante
+37,1,V112,Espécie de domicílio
+38,1,V113,Alteração no PME 1.08
+39,5,V002,Pasta
+44,1,V003,Situação
+45,2,V2001,Dia de referência
+47,2,V2002,Mês de referência
+49,9,V600,Estimativa da população
