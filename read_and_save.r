@@ -1,5 +1,4 @@
 library(data.table)
-library(iotools)
 library(stringi)
 
 ## I used `PME_1991_a_2000/pme1991-2000.doc` to create the dictionaries in the `input` directory
@@ -20,7 +19,7 @@ tmpd <- tempdir()
 out_dir <- "/home/gustavo/Dropbox/v2/data/PME/FullData"
 
 # Internal function for reading the data given filename/year
-.readfun2 <- function(fname_state, yyyy, dict) {
+.readfun <- function(fname_state, yyyy, dict) {
                                         # Recover state name:
   state_recovered <- gsub(".*([a-z]{2}).\\.txt$", "\\1",
                           fname_state, ignore.case = TRUE)
@@ -42,28 +41,6 @@ out_dir <- "/home/gustavo/Dropbox/v2/data/PME/FullData"
 }
 
 
-# Internal function for reading the data given filename/year
-.readfun <- function(fname_state, yyyy) {
-                                        # Recover state name:
-  state_recovered <- gsub(".*([a-z]{2}).\\.txt$", "\\1",
-                          fname_state, ignore.case = TRUE)
-
-  df_state <- iotools::input.file(
-                         fname_state, formatter = dstrfw,
-                         col_types = rep("character", nrow(ldict$person)),
-                         widths = ldict$person[, Width]
-                       )
-
-  df_state[, .year := yyyy]
-  df_state[, .state := state_recovered]
-
-  message(glue::glue("[Year {yyyy}]     Finished state {state_recovered}"))
-
-  return(df_state)
-}
-
-
-
 # Start reading stuff
 for (yyyy in as.character(seq(1991, 2000, by = 1))) {
   message(glue::glue("[Year {yyyy}] Starting"))
@@ -79,10 +56,10 @@ for (yyyy in as.character(seq(1991, 2000, by = 1))) {
                                         # "household" in portuguese
 
   message(glue::glue("[Year {yyyy}] Reading person datasets"))
-  dt_person <- rbindlist(lapply(datasets_person, .readfun2, yyyy = yyyy,
+  dt_person <- rbindlist(lapply(datasets_person, .readfun, yyyy = yyyy,
                                 dict = ldict$person))
   message(glue::glue("[Year {yyyy}] Reading household datasets"))
-  dt_hh <- rbindlist(lapply(datasets_hh, .readfun2, yyyy = yyyy,
+  dt_hh <- rbindlist(lapply(datasets_hh, .readfun, yyyy = yyyy,
                             dict = ldict$household))
 
 
