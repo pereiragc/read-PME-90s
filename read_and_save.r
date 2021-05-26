@@ -1,8 +1,16 @@
 library(data.table)
 library(stringi)
 
-## I used `PME_1991_a_2000/pme1991-2000.doc` to create the dictionaries in the `input` directory
 
+parameters <- list(
+  start = 1991,  # >= 1991
+  end = 2000,    # <= 2000
+  zip_dir =  "/home/gustavo/Dropbox/v2/data/PME/PME_1991_a_2000/TXT",
+  out_dir = "/home/gustavo/Dropbox/v2/data/PME/FullData"
+)
+
+
+## I used `PME_1991_a_2000/pme1991-2000.doc` to create the dictionaries in the `input` directory
 ldict <- list(
   person = data.table::fread("input/dict-90-2k-person-treated.csv"),
   household = data.table::fread("input/dict-90-2k-household-treated.csv")
@@ -13,10 +21,8 @@ invisible(lapply(ldict, function(DT) DT[, End := Start + Width - 1]))
 
 
 # Start dealing with PME data...
-zip_dir <- "/home/gustavo/Dropbox/v2/data/PME/PME_1991_a_2000/TXT"
 tmpd <- tempdir()
 
-out_dir <- "/home/gustavo/Dropbox/v2/data/PME/FullData"
 
 # Internal function for reading the data given filename/year
 .readfun <- function(fname_state, yyyy, dict) {
@@ -47,7 +53,7 @@ for (yyyy in as.character(seq(1991, 2000, by = 1))) {
 
   zipf <- glue::glue("pme{yyyy}.zip")
 
-  u <- unzip(file.path(zip_dir, zipf), exdir = tmpd)
+  u <- unzip(file.path(parameters$zip_dir, zipf), exdir = tmpd)
 
 
   datasets_person <- grep("p\\.txt$", u, value = TRUE, ignore.case=TRUE)
@@ -63,10 +69,10 @@ for (yyyy in as.character(seq(1991, 2000, by = 1))) {
                             dict = ldict$household))
 
 
-  fwrite(dt_person, file.path(out_dir,
+  fwrite(dt_person, file.path(parameters$out_dir,
                               glue::glue("person-{yyyy}.csv")))
 
-  fwrite(dt_hh, file.path(out_dir,
+  fwrite(dt_hh, file.path(parameters$out_dir,
                           glue::glue("household-{yyyy}.csv")))
 
 
@@ -74,6 +80,3 @@ for (yyyy in as.character(seq(1991, 2000, by = 1))) {
   file.remove(u)  # remove temporary files
   message(glue::glue("[Year {yyyy}] Removed temporary files in {tmpd} "))
 }
-
-
-yyyy <- 1995
