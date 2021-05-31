@@ -2,10 +2,15 @@ library(data.table)
 library(stringi)
 
 
+source("lib.r", chdir = TRUE)
+
+
 parameters <- list(
   start = 1991,  # >= 1991
   end = 2000,    # <= 2000
-  zip_dir =  "/home/gustavo/Dropbox/v2/data/PME/PME_1991_a_2000/TXT",
+  zip_dir1 =  "/home/gustavo/Dropbox/v2/data/PME/PME_1991_a_2000/TXT",
+  zip_dir2 =  "/home/gustavo/Dropbox/v2/data/PME/PME_post2k",
+  dir_2001 =  "/home/gustavo/Dropbox/v2/data/PME/PME_2001/2001/Dados",
   out_dir = "/home/gustavo/Dropbox/v2/data/PME/FullData"
 )
 
@@ -24,36 +29,16 @@ invisible(lapply(ldict, function(DT) DT[, End := Start + Width - 1]))
 tmpd <- tempdir()
 
 
-# Internal function for reading the data given filename/year
-.readfun <- function(fname_state, yyyy, dict) {
-                                        # Recover state name:
-  state_recovered <- gsub(".*([a-z]{2}).\\.txt$", "\\1",
-                          fname_state, ignore.case = TRUE)
-
-  df_state <- fread(fname_state, header = FALSE, sep = "\n")
-  df_state <- df_state[, lapply(seq_len(dict[, .N]), function(ii) {
-    stri_sub(V1, dict[, Start[ii]], dict[, End[ii]])
-    ## https://stackoverflow.com/questions/24715894/faster-way-to-read-fixed-width-files
-  })]
-
-  setnames(df_state, new = dict[, Name])
-
-  df_state[, .year := yyyy]
-  df_state[, .state := state_recovered]
-
-  message(glue::glue("[Year {yyyy}]     Finished state {state_recovered}"))
-
-  return(df_state)
-}
-
-
 # Start reading stuff
-for (yyyy in as.character(seq(1991, 2000, by = 1))) {
+pre2k <- intersect(seq(1991, 2000, by = 1),
+                   seq(parameters$start, parameters$end, by = 1))
+
+for (yyyy in as.character(pre2k)) {
   message(glue::glue("[Year {yyyy}] Starting"))
 
   zipf <- glue::glue("pme{yyyy}.zip")
 
-  u <- unzip(file.path(parameters$zip_dir, zipf), exdir = tmpd)
+  u <- unzip(file.path(parameters$zip_dir1, zipf), exdir = tmpd)
 
 
   datasets_person <- grep("p\\.txt$", u, value = TRUE, ignore.case=TRUE)
@@ -62,7 +47,7 @@ for (yyyy in as.character(seq(1991, 2000, by = 1))) {
                                         # "household" in portuguese
 
   message(glue::glue("[Year {yyyy}] Reading person datasets"))
-  dt_person <- rbindlist(lapply(datasets_person, .readfun, yyyy = yyyy,
+  dt_person <- rbindlist(lapply(datasets_person, .readfun90s, yyyy = yyyy,
                                 dict = ldict$person))
   message(glue::glue("[Year {yyyy}] Reading household datasets"))
   dt_hh <- rbindlist(lapply(datasets_hh, .readfun, yyyy = yyyy,
@@ -79,4 +64,25 @@ for (yyyy in as.character(seq(1991, 2000, by = 1))) {
   message(glue::glue("[Year {yyyy}] Wrote parsed datasets"))
   file.remove(u)  # remove temporary files
   message(glue::glue("[Year {yyyy}] Removed temporary files in {tmpd} "))
+}
+
+
+
+dict_post2k <- data.table::fread("input/dict-2k-2015.csv")
+dict_post2k[, End :=  Start + Width - 1]
+
+## Read 2001
+if (data.table::inrange(2001, parameters$start, parameters$end)) {
+  yyyy <- "2001"
+
+  f01 <- list.files(parameters$dir_2001)
+
+  ldt <- lapply(f01,
+                function(f) .readfun2k(file.path(parameters$dir_2001, f),
+                                       "2001",
+                                       dict_post2k))
+
+  fwrite(rbindlist(ldt), file.path(parameters$out_dir, glue::glue("full-{yyyy}.csv")))
+
+  message(glue::glue("[Year {yyyy}] Wrote parsed datasets"))
 }
