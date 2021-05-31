@@ -68,7 +68,8 @@ for (yyyy in as.character(pre2k)) {
 
 
 
-dict_post2k <- data.table::fread("input/dict-2k-2015.csv")
+dict_post2k <- data.table::fread("input/dict-2k-2015.csv", colClasses = list(character = "Width"))
+dict_post2k[grepl("\\.\\d+", Width), Decimal := gsub(".*\\.(\\d+)", "\\1", Width)]
 dict_post2k[, End :=  Start + Width - 1]
 
 ## Read 2001
@@ -82,7 +83,10 @@ if (data.table::inrange(2001, parameters$start, parameters$end)) {
                                        "2001",
                                        dict_post2k))
 
-  fwrite(rbindlist(ldt), file.path(parameters$out_dir, glue::glue("full-{yyyy}.csv")))
+  fwrite(rbindlist(ldt), file.path(parameters$out_dir,
+                                   glue::glue("full-{yyyy}.csv")))
 
   message(glue::glue("[Year {yyyy}] Wrote parsed datasets"))
 }
+
+
